@@ -38,14 +38,11 @@ class SMSController extends GetxController {
   void listenNotification() {
     // requestForPermission();
     print("Listening SMS");
-
-    // NotificationListenerService.notificationsStream.listen((event) {
-    //   print(event);
-    // });
     NotificationListenerService.notificationsStream.listen((event) {
       print("Current notification: $event");
       if (event.packageName == "com.whatsapp") {
         event.packageName = DateTime.now().toString();
+        print("phone : ${contacts.length}");
         if (event.title!.contains(":")) {
           for (var element in contacts) {
             if (event.title!.split(":")[1].trim().toLowerCase() ==
@@ -53,14 +50,33 @@ class SMSController extends GetxController {
               event.title = "${event.title} - ${element.phones[0].number}";
             }
           }
-        }
-        for (var element in contacts) {
-          if (event.title!.toLowerCase() ==
-              element.structuredName?.displayName.toLowerCase()) {
-            event.title = "${event.title} - ${element.phones[0].number}";
+        } else {
+          for (var element in contacts) {
+            if (event.title!.toLowerCase() ==
+                element.structuredName?.displayName.toLowerCase()) {
+              event.title = "${event.title} - ${element.phones[0].number}";
+              // } else {
+              //   event.title = event.title;
+            }
           }
         }
-        notificationList.add(event);
+        if (event.content?.toLowerCase().trim() !=
+                "Checking for new messages".toLowerCase() &&
+            !(event.content ?? "")
+                .toLowerCase()
+                .trim()
+                .contains('new messages')) {
+          if (notificationList.isEmpty) {
+            notificationList.add(event);
+            notificationList.value = notificationList.toSet().toList();
+          }
+          if (notificationList.isNotEmpty &&
+              notificationList.last.title != event.title &&
+              notificationList.last.content != event.content) {
+            notificationList.add(event);
+            // notificationList.value = notificationList.toSet().toList();
+          }
+        }
       }
     });
   }

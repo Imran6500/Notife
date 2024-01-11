@@ -70,7 +70,9 @@ class _HomePageState extends State<HomePage> {
                                             fontSize: 15),
                                       ),
                                       Text(
-                                        e.title.split(" ")[0],
+                                        e.title.contains(":")
+                                            ? e.title.split(" ")[0]
+                                            : e.title,
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 15),
@@ -117,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                                                   ? e.title
                                                       .split("-")[0]
                                                       .split(':')[1]
-                                                  : e.title,
+                                                  : e.title.split(':')[1],
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 15),
@@ -141,21 +143,21 @@ class _HomePageState extends State<HomePage> {
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  Row(
-                                    children: [
-                                      const Text("Mob No -",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 15)),
-                                      if (e.title.contains("-"))
+                                  if (e.title.contains("-"))
+                                    Row(
+                                      children: [
+                                        const Text("Mob No -",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15)),
                                         Text(
                                           e.title.split("-")[1],
                                           style: const TextStyle(
                                               fontWeight: FontWeight.w500,
                                               fontSize: 15),
                                         ),
-                                    ],
-                                  ),
+                                      ],
+                                    ),
                                   const SizedBox(
                                     height: 10,
                                   ),
